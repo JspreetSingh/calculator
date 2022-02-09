@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(const Calculator());
@@ -29,6 +30,56 @@ class CalculatorApp extends StatefulWidget {
 }
 
 class _CalculatorAppState extends State<CalculatorApp> {
+  String equation = "0";
+  String result = "0";
+  String expression = "";
+  double equationFontSize = 38.0;
+  double resultFontsize = 48.0;
+
+  buttonPressed(String buttonText) {
+    setState(() {
+      if (buttonText == "C") {
+        equation = "0";
+        result = "0";
+        equationFontSize = 38.0;
+        resultFontsize = 48.0;
+      } else if (buttonText == "X") {
+        equationFontSize = 48.0;
+        resultFontsize = 38.0;
+        equation = equation.substring(0, equation.length - 1);
+        if (equation == "") {
+          equation = "0";
+        }
+      } else if (buttonText == "=") {
+        equationFontSize = 38.0;
+        resultFontsize = 48.0;
+
+        expression = equation;
+        expression = expression.replaceAll('x', '*');
+        expression = expression.replaceAll('/', '/');
+
+        try {
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+
+          ContextModel cm = ContextModel();
+          result = '${exp.evaluate(EvaluationType.REAL, cm)}';
+        } catch (e) {
+          result = "error";
+        }
+      } else {
+        equationFontSize = 38.0;
+        resultFontsize = 48.0;
+
+        if (equation == "0") {
+          equation = buttonText;
+        } else {
+          equation = equation + buttonText;
+        }
+      }
+    });
+  }
+
   Widget buildbutton(
       String buttonText, double buttonHeight, Color buttonColor) {
     return Container(
@@ -40,7 +91,7 @@ class _CalculatorAppState extends State<CalculatorApp> {
               side: const BorderSide(
                   color: Colors.white, width: 1, style: BorderStyle.solid)),
           padding: const EdgeInsets.all(30.0),
-          onPressed: null,
+          onPressed: () => buttonPressed(buttonText),
           child: Text(
             buttonText,
             style: const TextStyle(
@@ -61,16 +112,16 @@ class _CalculatorAppState extends State<CalculatorApp> {
           Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-              child: (const Text(
-                "0",
-                style: TextStyle(fontSize: 38.0),
+              child: (Text(
+                equation,
+                style: TextStyle(fontSize: equationFontSize),
               ))),
           Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-              child: (const Text(
-                "0",
-                style: TextStyle(fontSize: 48.0),
+              child: (Text(
+                result,
+                style: TextStyle(fontSize: resultFontsize),
               ))),
           const Expanded(child: Divider()),
           Row(
@@ -110,7 +161,7 @@ class _CalculatorAppState extends State<CalculatorApp> {
                 ),
               ),
 
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.25,
                 child: Table(
                   children: [
