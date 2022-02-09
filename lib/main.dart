@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,6 +29,29 @@ class CalculatorApp extends StatefulWidget {
 }
 
 class _CalculatorAppState extends State<CalculatorApp> {
+  Widget buildbutton(
+      String buttonText, double buttonHeight, Color buttonColor) {
+    return Container(
+      height: MediaQuery.of(context).size.width * 0.1 * buttonHeight,
+      color: buttonColor,
+      child: FlatButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+              side: const BorderSide(
+                  color: Colors.white, width: 1, style: BorderStyle.solid)),
+          padding: const EdgeInsets.all(30.0),
+          onPressed: null,
+          child: Text(
+            buttonText,
+            style: const TextStyle(
+              fontSize: 23.0,
+              fontWeight: FontWeight.normal,
+              color: Colors.white,
+            ),
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +72,81 @@ class _CalculatorAppState extends State<CalculatorApp> {
                 "0",
                 style: TextStyle(fontSize: 48.0),
               ))),
-          const Expanded(child: Divider())
+          const Expanded(child: Divider()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              // ignore: sized_box_for_whitespace
+              Container(
+                width: MediaQuery.of(context).size.width * .75,
+                child: Table(
+                  children: [
+                    TableRow(children: [
+                      buildbutton("C", 2, Colors.redAccent),
+                      buildbutton("X", 2, Colors.blue),
+                      buildbutton("/", 2, Colors.blue),
+                    ]),
+                    TableRow(children: [
+                      buildbutton("7", 2, Colors.black54),
+                      buildbutton("8", 2, Colors.black54),
+                      buildbutton("9", 2, Colors.black54),
+                    ]),
+                    TableRow(children: [
+                      buildbutton("4", 2, Colors.black54),
+                      buildbutton("5", 2, Colors.black54),
+                      buildbutton("6", 2, Colors.black54),
+                    ]),
+                    TableRow(children: [
+                      buildbutton("1", 2, Colors.black54),
+                      buildbutton("2", 2, Colors.black54),
+                      buildbutton("3", 2, Colors.black54),
+                    ]),
+                    TableRow(children: [
+                      buildbutton(".", 2, Colors.black54),
+                      buildbutton("0", 2, Colors.black54),
+                      buildbutton("00", 2, Colors.black54),
+                    ]),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Table(
+                  children: [
+                    TableRow(children: [
+                      buildbutton(
+                        "x",
+                        2,
+                        Colors.blue,
+                      )
+                    ]),
+                    TableRow(children: [
+                      buildbutton(
+                        "-",
+                        2,
+                        Colors.blue,
+                      )
+                    ]),
+                    TableRow(children: [
+                      buildbutton(
+                        "+",
+                        2,
+                        Colors.blue,
+                      )
+                    ]),
+                    TableRow(children: [
+                      buildbutton(
+                        "=",
+                        4,
+                        Colors.redAccent,
+                      )
+                    ])
+                  ],
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
